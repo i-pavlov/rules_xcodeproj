@@ -16,6 +16,11 @@ def _get_file(target):
 def _adjust_for_xcode(file, default_app_icon_path, *, ctx):
     if file == None:
         return None
+    # rules_ios returns a list of files, but rules_apple returns a single file.
+    # as a temporary workaround, we just take the first file in the list.
+    # TODO: remove this workaround once rules_ios is updated to return a single file or vice versa.
+    if type(file) == type([]):
+        file = file[0]
 
     output = ctx.actions.declare_file(
         "rules_xcodeproj/{}/Info.plist".format(ctx.rule.attr.name),
